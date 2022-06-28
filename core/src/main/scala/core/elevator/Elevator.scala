@@ -123,7 +123,6 @@ object Elevator:
 
   end ElevatorState
 
-  sealed trait ElevatorError derives Show
-  object ElevatorError:
-    case object StateNotFound extends ElevatorError
+  enum ElevatorError derives Show:
+    case StateNotFound
 end Elevator

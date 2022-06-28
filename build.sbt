@@ -3,7 +3,7 @@ import _root_.io.github.davidgregory084.ScalacOption
 name := "elevator-simulation"
 
 ThisBuild / organization := "elevator"
-ThisBuild / scalaVersion := "3.1.2"
+ThisBuild / scalaVersion := "3.1.3"
 
 ThisBuild / scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.6.0"
 

@@ -25,7 +25,7 @@ object Settings {
     coreTest
   )
 
-  val ItTest = "it,test"
+  val ItTest = s"$IntegrationTest,$Test"
 
   val shellTest: Seq[Setting[_]] = Seq(
     Test / parallelExecution            := true,

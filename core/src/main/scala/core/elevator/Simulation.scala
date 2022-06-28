@@ -18,11 +18,7 @@ abstract class Simulation[F[_]: Monad](using
 
 object Simulation:
   case class SimulationState(status: SimulationStatus = SimulationStatus.Stopped)
-  // TODO: this syntax is not a coproduct, why?
-  // enum SimulationStatus:
-  //   case Running
-  //   case Stopped
-  sealed trait SimulationStatus derives Show, CanEqual
-  object SimulationStatus:
-    case object Running extends SimulationStatus
-    case object Stopped extends SimulationStatus
+
+  enum SimulationStatus derives Show, CanEqual:
+    case Running
+    case Stopped
