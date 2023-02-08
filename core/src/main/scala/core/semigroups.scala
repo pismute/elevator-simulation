@@ -2,7 +2,7 @@ package core
 
 import cats.{Eq, Order, Semigroup}
 
-object monoids:
+object semigroups:
   object min:
     opaque type Min[A] = A
 

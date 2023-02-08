@@ -26,7 +26,7 @@ class Elevator[F[_]](
   private[elevator] def getState(): F[ElevatorState] =
     S.get.flatMap(_.get(elevatorId).fold(R.raise(ElevatorError.StateNotFound))(_.pure))
 
-  // Unfortunately, Stateful does not have an atomic update
+  // Unfortunately, Stateful does not have an atomic modify+get
   // https://github.com/typelevel/cats-mtl/pull/120
   private[elevator] def state[B](modify: ElevatorState => (ElevatorState, B)): F[B] =
     for

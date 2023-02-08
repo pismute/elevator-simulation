@@ -3,11 +3,11 @@ package core
 import cats.Semigroup
 import cats.kernel.laws.discipline.*
 import cats.syntax.semigroup.*
-import core.monoids.{*, given}
+import core.semigroups.{*, given}
 import core.test.*
 import org.scalacheck.Arbitrary
 
-class MonoidsSpec extends CoreSuite:
+class SemigroupsSpec extends CoreSuite:
   given [A: Arbitrary]: Arbitrary[Min[A]] = Arbitrary(Arbitrary.arbitrary[A].map(Min[A]))
 
   checkAll("Semigroup[Min[Int]]", SemigroupTests[Min[Int]].semigroup)

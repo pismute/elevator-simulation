@@ -9,7 +9,7 @@ import cats.syntax.flatMap.*
 import cats.syntax.foldable.*
 import cats.syntax.functor.*
 import cats.syntax.traverse.*
-import core.monoids.*
+import core.semigroups.*
 
 import System.*
 
