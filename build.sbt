@@ -36,6 +36,10 @@ val root = (project in file("."))
     shell
   )
 
+ThisBuild / githubWorkflowPublishTargetBranches := Seq() // disable publish
+
+ThisBuild / githubWorkflowIncludeClean := false // publish disabled, clean is unnecessary
+
 val scalaSteward = "pismute-steward[bot]"
 
 ThisBuild / mergifyStewardConfig := Some(
