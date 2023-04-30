@@ -35,3 +35,22 @@ val root = (project in file("."))
     core,
     shell
   )
+
+val scalaSteward = "pismute-steward[bot]"
+
+ThisBuild / mergifyStewardConfig := Some(
+  MergifyStewardConfig(
+    author = scalaSteward,
+    mergeMinors = true,
+    action = MergifyAction.Merge(Some("squash"))
+  )
+)
+
+ThisBuild / mergifyPrRules += {
+  val authorCondition = MergifyCondition.Custom("author=pismute-steward[bot]")
+  MergifyPrRule(
+    "label scala-steward's PRs",
+    List(authorCondition),
+    List(MergifyAction.Label(List("dependency-update")))
+  )
+}
