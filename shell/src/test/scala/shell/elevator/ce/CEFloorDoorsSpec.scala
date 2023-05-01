@@ -22,17 +22,25 @@ class CEFloorDoorsSpec extends TestAppSuite:
     }
   }
 
-  test("A fiber should await and be awaken") {
+  test("A fiber should await and be awaken: lower boundary") {
     runAppT(appEnv) {
       CEInterpreters.floorDoors[AppT](1, 3).use { floorDoors =>
         for
-          fib1 <- floorDoors.await(1).start // lower boundary
-          _    <- floorDoors.awake(1)
-          _    <- fib1.join
+          fib <- floorDoors.await(1).start // lower bound
+          _   <- floorDoors.awake(1)
+          _   <- fib.join
+        yield ()
+      }
+    }
+  }
 
-          fib2 <- floorDoors.await(3).start // upper boundary
-          _    <- floorDoors.awake(3)
-          _    <- fib2.join
+  test("A fiber should await and be awaken: upper boundary") {
+    runAppT(appEnv) {
+      CEInterpreters.floorDoors[AppT](1, 3).use { floorDoors =>
+        for
+          fib <- floorDoors.await(3).start // upper boundary
+          _   <- floorDoors.awake(3)
+          _   <- fib.join
         yield ()
       }
     }
