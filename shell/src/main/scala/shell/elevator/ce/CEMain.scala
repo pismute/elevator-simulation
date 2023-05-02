@@ -49,10 +49,10 @@ object CEMain extends IOApp.Simple:
       env                  <- A.ask
       (duration, low, high) =
         (env.duration, env.floorManagerEnv.lowestFloor, env.floorManagerEnv.highestFloor)
-      _                    <- system.start()
+      _                    <- system.start
       input                 = data.passengers[F](low, high, duration)
       _                    <- simulate(input, system)
-      _                    <- system.gracefully()
+      _                    <- system.gracefully
     yield ()
 
   def simulate[F[_]: Async](input: Stream[F, Passenger], system: SystemAlg[F])(using C: Console[F]): F[Unit] =

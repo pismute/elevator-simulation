@@ -25,7 +25,7 @@ def simpleSimulation[F[_]](using
     // core module does not depend on an effect system, so it holds a thread.
     // a test keeps getting blocked if simulation keeps running
     // Every iteration of Elevator calls `sleepTick`, if it called sleepCount times, the simulation get stopped
-    def sleepTick(): F[Unit] =
+    def sleepTick: F[Unit] =
       S.modify { s =>
         if s.sleepCount > 0 then s.copy(sleepCount = s.sleepCount - 1)
         else s.copy(simulationState = Simulation.SimulationState())

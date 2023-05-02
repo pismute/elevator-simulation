@@ -28,13 +28,12 @@ trait ElevatorAlg[F[_]]:
   def distance(from: Floor): F[Option[Distance]]
   def call(floor: Floor): F[Unit]
   def getOn(passenger: Passenger): F[Unit]
-  def start(): F[Unit]
+  def start: F[Unit]
 
 trait FloorDoorsAlg[F[_]]:
   def await(floor: Floor): F[Unit]
   def awake(floor: Floor): F[Unit]
   def awakeAll: F[Unit]
-
 
 trait FloorManagerAlg[F[_]]:
   def waitOn(floor: Floor): F[Unit]
@@ -43,13 +42,13 @@ trait FloorManagerAlg[F[_]]:
   def openAllDoors: F[Unit]
 
 trait SimulationAlg[F[_]]:
-  def sleepTick(): F[Unit]
-  def isRunning(): F[Boolean]
-  def start(): F[Unit]
-  def stop(): F[Unit]
+  def sleepTick: F[Unit]
+  def isRunning: F[Boolean]
+  def start: F[Unit]
+  def stop: F[Unit]
 
 trait SystemAlg[F[_]]:
   def elevators: List[ElevatorAlg[F]]
   def newPassenger(passenger: Passenger): F[Unit]
-  def start(): F[Unit]
-  def gracefully(): F[Unit]
+  def start: F[Unit]
+  def gracefully: F[Unit]

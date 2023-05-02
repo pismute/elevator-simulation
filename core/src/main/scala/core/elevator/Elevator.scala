@@ -23,20 +23,20 @@ class Elevator[F[_]](
   R: Raise[F, ElevatorError],
   S: Stateful[F, Map[ElevatorId, ElevatorState]]
 ) extends ElevatorAlg[F]:
-  private[elevator] def getState(): F[ElevatorState] =
+  private[elevator] def getState: F[ElevatorState] =
     S.get.flatMap(_.get(elevatorId).fold(R.raise(ElevatorError.StateNotFound))(_.pure))
 
   // Unfortunately, Stateful does not have an atomic modify+get
   // https://github.com/typelevel/cats-mtl/pull/120
   private[elevator] def state[B](modify: ElevatorState => (ElevatorState, B)): F[B] =
     for
-      s      <- getState()
+      s      <- getState
       (s2, b) = modify(s)
       _      <- S.modify(xs => xs + (elevatorId -> s2))
     yield b
 
   def distance(from: Floor): F[Option[Distance]] =
-    getState().map(ElevatorState.distance(from))
+    getState.map(ElevatorState.distance(from))
 
   def call(floor: Floor): F[Unit] =
     state(s => ElevatorState.call(floor)(s) -> ())
@@ -45,7 +45,7 @@ class Elevator[F[_]](
     state(s => ElevatorState.getOn(passenger)(s) -> ()) *>
       floorDoors.await(passenger.to)
 
-  def start(): F[Unit] = {
+  def start: F[Unit] = {
     val move =
       for
         next <- state { s =>
@@ -57,7 +57,7 @@ class Elevator[F[_]](
                 }
       yield ()
 
-    F.tailRecM(())(_ => simulation.isRunning().ifM(simulation.sleepTick() >> move.map(_.asLeft), ().asRight.pure))
+    F.tailRecM(())(_ => simulation.isRunning.ifM(simulation.sleepTick >> move.map(_.asLeft), ().asRight.pure))
   }
 end Elevator
 

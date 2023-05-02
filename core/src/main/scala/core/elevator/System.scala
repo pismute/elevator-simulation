@@ -44,15 +44,15 @@ class System[F[_]](
       _        <- validate(passenger)
       // keep trying to find if unavailable
       elevator <- findClosest(passenger.from).tailRecM(
-                    _.map(_.toRight(simulation.sleepTick() >> findClosest(passenger.from)))
+                    _.map(_.toRight(simulation.sleepTick >> findClosest(passenger.from)))
                   )
       _        <- elevator.call(passenger.from)
       _        <- floorManager.waitOn(passenger.from)
       _        <- elevator.getOn(passenger)
     yield ()
 
-  def start(): F[Unit]      = simulation.start()
-  def gracefully(): F[Unit] = simulation.stop() *> floorManager.openAllDoors
+  def start: F[Unit]      = simulation.start
+  def gracefully: F[Unit] = simulation.stop *> floorManager.openAllDoors
 
 object System:
   case class DistanceElevator[F[_]](distance: Distance, elevator: ElevatorAlg[F])

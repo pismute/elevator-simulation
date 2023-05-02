@@ -33,10 +33,10 @@ class CEMatrixSystem[F[_]](inner: SystemAlg[F])(using
       _      <- S.modify(CEMatrixSystem.leave(passenger, after))
     yield ()
 
-  def start(): F[Unit]      = inner.start()
-  def gracefully(): F[Unit] = inner.gracefully() >> report()
+  def start: F[Unit]      = inner.start
+  def gracefully: F[Unit] = inner.gracefully >> report
 
-  def report(): F[Unit] =
+  def report: F[Unit] =
     for
       state <- S.get
       r      = CEMatrixSystem.genReport(state)
@@ -143,18 +143,18 @@ class CEFiberSystem[F[_]: Parallel](inner: SystemAlg[F])(using
       _   <- S.modify(x => x.copy(passengerFibers = fib :: x.passengerFibers))
     yield ()
 
-  def start(): F[Unit] =
+  def start: F[Unit] =
     for
-      _      <- inner.start()
-      fibers <- elevators.traverse(_.start().start)
+      _      <- inner.start
+      fibers <- elevators.traverse(_.start.start)
       _      <- S.modify(x => x.copy(elevatorFibers = fibers))
     yield ()
 
-  def gracefully(): F[Unit] =
+  def gracefully: F[Unit] =
     for
       state <- S.get
       _     <- state.passengerFibers.parTraverse(_.join)
-      _     <- inner.gracefully()
+      _     <- inner.gracefully
       _     <- state.elevatorFibers.parTraverse(_.join)
     yield ()
 

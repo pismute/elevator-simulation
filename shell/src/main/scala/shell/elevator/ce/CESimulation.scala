@@ -13,7 +13,7 @@ class CESimulation[F[_]](using
   A: Ask[F, CESimulation.CESimulationEnv],
   S: Stateful[F, Simulation.SimulationState]
 ) extends Simulation[F]:
-  def sleepTick(): F[Unit] =
+  def sleepTick: F[Unit] =
     for
       tick <- A.reader(_.tick)
       _    <- F.sleep(tick)

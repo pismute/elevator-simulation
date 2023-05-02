@@ -67,7 +67,7 @@ class ElevatorSpec extends TestAppSuite:
         elevators <- mkSimpleElevators[AppT](floorManager, simulation)
         elevator   = elevators.headOption.getOrElse(fail("unexpected, no elevator!"))
         _         <- elevator.call(0)
-        _         <- elevator.start()
+        _         <- elevator.start
       yield ()
     }.map { (state, _) =>
       assertEquals(
@@ -86,8 +86,8 @@ class ElevatorSpec extends TestAppSuite:
         elevators <- mkSimpleElevators[AppT](floorManager, simulation)
         elevator   = elevators.headOption.getOrElse(fail("unexpected, no elevator!"))
         _         <- elevator.call(0)
-        _         <- simulation.start()
-        _         <- elevator.start()
+        _         <- simulation.start
+        _         <- elevator.start
       yield ()
     }.map { (state, _) =>
       assertEquals(state.elevatorStates.headOption.map(_._2.floor), Some(0))

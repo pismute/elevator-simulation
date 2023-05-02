@@ -14,8 +14,8 @@ class SimulationSpec extends TestAppSuite:
     runAppT(appEnv, appState) {
       val simulation = simpleSimulation[AppT]
 
-      simulation.isRunning().assertEquals(false) >>
-        simulation.start() >> simulation.isRunning().assertEquals(true) >>
-        simulation.stop() >> simulation.isRunning().assertEquals(false)
+      simulation.isRunning.assertEquals(false) >>
+        simulation.start >> simulation.isRunning.assertEquals(true) >>
+        simulation.stop >> simulation.isRunning.assertEquals(false)
     }
   }

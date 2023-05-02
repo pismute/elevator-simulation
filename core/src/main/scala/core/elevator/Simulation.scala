@@ -11,9 +11,9 @@ import Simulation.*
 abstract class Simulation[F[_]: Monad](using
   S: Stateful[F, SimulationState]
 ) extends SimulationAlg[F] {
-  def isRunning(): F[Boolean] = S.get.map(_.status == SimulationStatus.Running)
-  def start(): F[Unit]        = S.modify(_.copy(status = SimulationStatus.Running))
-  def stop(): F[Unit]         = S.modify(_.copy(status = SimulationStatus.Stopped))
+  def isRunning: F[Boolean] = S.get.map(_.status == SimulationStatus.Running)
+  def start: F[Unit]        = S.modify(_.copy(status = SimulationStatus.Running))
+  def stop: F[Unit]         = S.modify(_.copy(status = SimulationStatus.Stopped))
 }
 
 object Simulation:
