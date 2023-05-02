@@ -7,9 +7,6 @@ import org.scalacheck.Gen
 
 import scala.compiletime.*
 import scala.concurrent.Future
-import scala.concurrent.duration.{Duration, FiniteDuration}
-
-import java.util.concurrent.TimeUnit
 
 trait CoreSuite extends DisciplineSuite with AssertionsF with ScalacheckGens:
   override def munitValueTransforms: List[ValueTransform] =
@@ -24,8 +21,6 @@ trait CoreSuite extends DisciplineSuite with AssertionsF with ScalacheckGens:
       "Eval",
       matchable { case e: Eval[?] => Future(e.value)(munitExecutionContext) }
     )
-
-  override def munitTimeout: Duration = new FiniteDuration(10, TimeUnit.SECONDS)
 
 trait AssertionsF { self: Assertions =>
   def assertEqualsF[F[_]: Functor, A, B](
