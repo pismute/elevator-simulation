@@ -1,11 +1,13 @@
 package shell.elevator.ce
 
+import alleycats.std.iterable.*
 import cats.effect.{Async, Deferred}
 import cats.effect.std.AtomicCell
 import cats.mtl.Raise
 import cats.syntax.applicative.*
 import cats.syntax.flatMap.*
 import cats.syntax.functor.*
+import cats.syntax.traverse.*
 import core.elevator.*
 import core.mtl.*
 
@@ -37,6 +39,9 @@ class CEFloorDoors[F[_]: Async](
       deferred      <- maybeDeferred.liftToT(CEFloorDoors.CEFloorDoorsError.FloorNotFound(floor))
       _             <- deferred.complete(())
     yield ()
+
+  def awakeAll: F[Unit] =
+    doors.get.flatMap(_.values.traverse(_.complete(()))).void
 
 object CEFloorDoors:
   enum CEFloorDoorsError:

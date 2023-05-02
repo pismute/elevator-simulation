@@ -1,7 +1,7 @@
 package shell.elevator.ce
 
 import cats.Parallel
-import cats.derived.{ShowPretty, derived}
+import cats.derived.{derived, ShowPretty}
 import cats.effect.{Fiber, Spawn, Temporal}
 import cats.effect.implicits.*
 import cats.instances.list.*

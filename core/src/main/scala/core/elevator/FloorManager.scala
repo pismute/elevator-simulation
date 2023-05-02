@@ -21,6 +21,8 @@ class FloorManager[F[_]: Monad](
     for env <- A.ask
     yield env.lowestFloor <= floor && floor <= env.highestFloor
 
+  def openAllDoors: F[Unit] = floorDoors.awakeAll
+
 object FloorManager:
   case class FloorManagerEnv(
     lowestFloor: Floor,

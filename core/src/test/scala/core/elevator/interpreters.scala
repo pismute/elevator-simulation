@@ -14,6 +14,7 @@ import TestAppSuite.{*, given}
 def dummyFloorDoors[F[_]](using F: Applicative[F]): FloorDoorsAlg[F] = new FloorDoorsAlg[F]:
   def await(floor: Floor): F[Unit] = F.unit
   def awake(floor: Floor): F[Unit] = F.unit
+  def awakeAll: F[Unit]            = F.unit
 
 def simpleSimulation[F[_]](using
   F: Monad[F],

@@ -52,7 +52,7 @@ class System[F[_]](
     yield ()
 
   def start(): F[Unit]      = simulation.start()
-  def gracefully(): F[Unit] = simulation.stop()
+  def gracefully(): F[Unit] = simulation.stop() *> floorManager.openAllDoors
 
 object System:
   case class DistanceElevator[F[_]](distance: Distance, elevator: ElevatorAlg[F])
