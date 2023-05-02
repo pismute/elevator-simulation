@@ -2,8 +2,8 @@ package shell.elevator.ce
 
 import cats.Monad
 import cats.Parallel
-import cats.effect.{Async, Ref, Resource, Temporal}
-import cats.effect.std.Console
+import cats.effect.{Async, Resource, Temporal}
+import cats.effect.std.{AtomicCell, Console}
 import cats.mtl.{Ask, Raise, Stateful, Tell}
 import cats.syntax.flatMap.*
 import cats.syntax.functor.*
@@ -87,7 +87,7 @@ object CEInterpreters:
       system                        <- system[F](elevators, floorManager, simulation)
     yield CEInterpreters(simulation, floorManager, system)
 
-  def appState[F[_]: Async](env: AppEnv): Resource[F, Ref[F, AppState[F]]] = {
+  def appState[F[_]: Async](env: AppEnv): Resource[F, AtomicCell[F, AppState[F]]] = {
     val elevator = (0 until env.nrOfElevators).map { _ =>
       val id = ElevatorId.random()
 
@@ -110,5 +110,5 @@ object CEInterpreters:
       fiberSystem = fiberSystem
     )
 
-    Resource.eval(Ref.of(appState))
+    Resource.eval(AtomicCell[F].of(appState))
   }
