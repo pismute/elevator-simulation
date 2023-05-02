@@ -5,7 +5,12 @@ name := "elevator-simulation"
 ThisBuild / organization := "elevator"
 ThisBuild / scalaVersion := "3.2.2"
 
-ThisBuild / scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.6.0"
+ThisBuild / scalafixDependencies += "com.github.liancheng" %% "organize-imports"               % "0.6.0"
+ThisBuild / scalafixDependencies += "org.typelevel"        %% "typelevel-scalafix"             % "0.1.5"
+ThisBuild / scalafixDependencies += "org.typelevel"        %% "typelevel-scalafix-cats"        % "0.1.5"
+ThisBuild / scalafixDependencies += "org.typelevel"        %% "typelevel-scalafix-cats-effect" % "0.1.5"
+ThisBuild / scalafixDependencies += "org.typelevel"        %% "typelevel-scalafix-fs2"         % "0.1.5"
+ThisBuild / scalafixDependencies += "org.typelevel"        %% "typelevel-scalafix-http4s"      % "0.1.5"
 
 ThisBuild / testFrameworks += new TestFramework("munit.Framework")
 
