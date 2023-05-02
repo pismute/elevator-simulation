@@ -3,6 +3,7 @@ package shell.elevator.ce
 import cats.{Applicative, Functor, Monad, Show}
 import cats.effect.IO
 import cats.mtl.Tell
+import cats.syntax.apply.*
 import cats.syntax.either.*
 import cats.syntax.flatMap.*
 import cats.syntax.functor.*
@@ -17,6 +18,8 @@ import shell.test.CatsEffectShellSuite
 import scala.concurrent.duration.DurationInt
 
 trait TestAppSuite extends CatsEffectShellSuite:
+  export shell.elevator.ce.appt.io.*
+
   val appEnv = AppEnv(
     nrOfElevators = 2,
     duration = 3.seconds,
