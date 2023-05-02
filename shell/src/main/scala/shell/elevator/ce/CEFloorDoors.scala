@@ -1,7 +1,9 @@
 package shell.elevator.ce
 
-import cats.effect.{Async, Deferred, Ref}
+import cats.effect.{Async, Deferred}
+import cats.effect.std.AtomicCell
 import cats.mtl.Raise
+import cats.syntax.applicative.*
 import cats.syntax.flatMap.*
 import cats.syntax.functor.*
 import core.elevator.*
@@ -10,7 +12,7 @@ import core.mtl.*
 import scala.collection.immutable.IntMap
 
 class CEFloorDoors[F[_]: Async](
-  doors: Ref[F, IntMap[Deferred[F, Unit]]]
+  doors: AtomicCell[F, IntMap[Deferred[F, Unit]]]
 )(using
   R: Raise[F, CEFloorDoors.CEFloorDoorsError]
 ) extends FloorDoorsAlg[F]:
@@ -23,10 +25,13 @@ class CEFloorDoors[F[_]: Async](
 
   def awake(floor: Floor): F[Unit] =
     for
-      maybeDeferred <- doors.modify { map =>
-                         map.get(floor) match {
-                           case None           => (map, None)
-                           case Some(deferred) => (map + (floor -> Deferred.unsafe[F, Unit]), Some(deferred))
+      maybeDeferred <- doors.evalModify { dict =>
+                         dict.get(floor) match {
+                           case None           => (dict, None).pure
+                           case Some(deferred) =>
+                             Deferred[F, Unit].map { newDeferred =>
+                               (dict + (floor -> newDeferred), Some(deferred))
+                             }
                          }
                        }
       deferred      <- maybeDeferred.liftToT(CEFloorDoors.CEFloorDoorsError.FloorNotFound(floor))
@@ -37,9 +42,9 @@ object CEFloorDoors:
   enum CEFloorDoorsError:
     case FloorNotFound(floor: Floor)
 
-  def mkDoors[F[_]](low: Floor, high: Floor)(using F: Async[F]): F[Ref[F, IntMap[Deferred[F, Unit]]]] =
+  def mkDoors[F[_]](low: Floor, high: Floor)(using F: Async[F]): F[AtomicCell[F, IntMap[Deferred[F, Unit]]]] =
     for
-      vs  <- F.replicateA(high - low + 1, F.defer(Deferred[F, Unit]))
+      vs  <- F.replicateA(high - low + 1, Deferred[F, Unit])
       map  = IntMap.from((low to high).zip(vs))
-      ref <- Ref.of(map)
+      ref <- AtomicCell[F].of(map)
     yield ref

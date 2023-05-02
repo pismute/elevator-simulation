@@ -2,12 +2,12 @@ package shell.elevator.ce
 
 import cats.{Applicative, Functor, Monad, Show}
 import cats.effect.Ref
-import cats.effect.std.Console
+import cats.effect.std.{AtomicCell, Console}
 import cats.mtl.{Stateful, Tell}
 import cats.syntax.show.*
 
 object mtl:
-  extension [F[_], S](ref: Ref[F, S])
+  extension [F[_], S](ref: AtomicCell[F, S])
     def stateful(using Monad[F]): Stateful[F, S] =
       new Stateful[F, S]:
         val monad: Monad[F]                             = summon

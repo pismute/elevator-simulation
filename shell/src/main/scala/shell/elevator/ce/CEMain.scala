@@ -1,6 +1,6 @@
 package shell.elevator.ce
 
-import cats.effect.{Async, IO, IOApp, Ref, Resource}
+import cats.effect.{Async, IO, IOApp, Resource}
 import cats.effect.std.Console
 import cats.mtl.{Ask, Stateful}
 import cats.syntax.apply.*
