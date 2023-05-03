@@ -31,7 +31,7 @@ class CEFloorDoorsSpec extends TestAppSuite:
         for
           fib <- floorDoors.await(1).start // lower bound
           // awake must be called after await
-          _   <- IO.sleep(2.milli).liftTo[AppT]
+          _   <- IO.sleep(100.milli).liftTo[AppT]
           _   <- floorDoors.awake(1)
           _   <- fib.join
         yield ()
@@ -45,7 +45,7 @@ class CEFloorDoorsSpec extends TestAppSuite:
         for
           fib <- floorDoors.await(3).start // upper boundary
           // awake must be called after await
-          _   <- IO.sleep(2.milli).liftTo[AppT]
+          _   <- IO.sleep(100.milli).liftTo[AppT]
           _   <- floorDoors.awake(3)
           _   <- fib.join
         yield ()
