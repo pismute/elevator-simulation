@@ -1,21 +1,24 @@
 package shell.elevator.ce
 
-import cats.{Applicative, Functor, Monad, Show}
+import scala.concurrent.duration.DurationInt
+
 import cats.effect.IO
+
 import cats.mtl.Tell
+
 import cats.syntax.apply.*
 import cats.syntax.either.*
 import cats.syntax.flatMap.*
 import cats.syntax.functor.*
 import cats.syntax.show.*
+import cats.{Applicative, Functor, Monad, Show}
+
 import core.elevator.*
 import core.test.*
 import munit.*
 import shell.elevator.ce.app.*
 import shell.elevator.ce.appt.*
 import shell.test.CatsEffectShellSuite
-
-import scala.concurrent.duration.DurationInt
 
 trait TestAppSuite extends CatsEffectShellSuite:
   export shell.elevator.ce.appt.io.*

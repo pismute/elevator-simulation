@@ -1,14 +1,16 @@
 package core.elevator
 
-import cats.{Monad, Order, Show}
-import cats.derived.derived
 import cats.mtl.Raise
+
+import cats.derived.derived
 import cats.syntax.applicative.*
 import cats.syntax.apply.*
 import cats.syntax.flatMap.*
 import cats.syntax.foldable.*
 import cats.syntax.functor.*
 import cats.syntax.traverse.*
+import cats.{Monad, Order, Show}
+
 import core.semigroups.*
 
 import System.*

@@ -5,12 +5,12 @@ name := "elevator-simulation"
 ThisBuild / organization := "elevator"
 ThisBuild / scalaVersion := "3.2.2"
 
-ThisBuild / scalafixDependencies += "com.github.liancheng" %% "organize-imports"               % "0.6.0"
-ThisBuild / scalafixDependencies += "org.typelevel"        %% "typelevel-scalafix"             % "0.1.5"
-ThisBuild / scalafixDependencies += "org.typelevel"        %% "typelevel-scalafix-cats"        % "0.1.5"
-ThisBuild / scalafixDependencies += "org.typelevel"        %% "typelevel-scalafix-cats-effect" % "0.1.5"
-ThisBuild / scalafixDependencies += "org.typelevel"        %% "typelevel-scalafix-fs2"         % "0.1.5"
-ThisBuild / scalafixDependencies += "org.typelevel"        %% "typelevel-scalafix-http4s"      % "0.1.5"
+ThisBuild / scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.6.0"
+ThisBuild / scalafixDependencies += "org.typelevel" %% "typelevel-scalafix" % "0.1.5"
+ThisBuild / scalafixDependencies += "org.typelevel" %% "typelevel-scalafix-cats" % "0.1.5"
+ThisBuild / scalafixDependencies += "org.typelevel" %% "typelevel-scalafix-cats-effect" % "0.1.5"
+ThisBuild / scalafixDependencies += "org.typelevel" %% "typelevel-scalafix-fs2" % "0.1.5"
+ThisBuild / scalafixDependencies += "org.typelevel" %% "typelevel-scalafix-http4s" % "0.1.5"
 
 ThisBuild / testFrameworks += new TestFramework("munit.Framework")
 
@@ -21,13 +21,36 @@ val extraScalacOptions = Set(
   ScalacOptions.languageFeatureOption("strictEquaility")
 )
 
-val core = project.settings(
+val checkMacroScalacOption = ScalacOptions.advancedOption("check-macros", _ => true)
+
+val mtl = project.settings(
+  name := "classy-mtl",
   tpolecatScalacOptions ++= extraScalacOptions,
-  Settings.core
+  tpolecatDevModeOptions += checkMacroScalacOption,
+  libraryDependencies ++= Seq(
+    "org.typelevel" %% "cats-mtl" % "1.3.1"
+  )
 )
 
+val ce3 = project
+  .dependsOn(mtl)
+  .settings(
+    name := "classy-ce3",
+    tpolecatScalacOptions ++= extraScalacOptions,
+    libraryDependencies ++= Seq(
+      "org.typelevel" %% "cats-effect" % "3.4.10"
+    )
+  )
+
+val core = project
+  .dependsOn(mtl)
+  .settings(
+    tpolecatScalacOptions ++= extraScalacOptions,
+    Settings.core
+  )
+
 val shell = project
-  .dependsOn(core % s"$Compile->$Compile;$Test->$Test")
+  .dependsOn(ce3, core % s"$Compile->$Compile;$Test->$Test")
   .configs(IntegrationTest)
   .settings(
     tpolecatScalacOptions ++= extraScalacOptions,
@@ -37,6 +60,8 @@ val shell = project
 
 val root = (project in file("."))
   .aggregate(
+    mtl,
+    ce3,
     core,
     shell
   )

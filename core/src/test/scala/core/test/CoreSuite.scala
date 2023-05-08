@@ -1,12 +1,13 @@
 package core.test
 
-import cats.{Eval, Functor}
-import cats.syntax.functor.*
-import munit.*
-import org.scalacheck.Gen
-
 import scala.compiletime.*
 import scala.concurrent.Future
+
+import cats.syntax.functor.*
+import cats.{Eval, Functor}
+
+import munit.*
+import org.scalacheck.Gen
 
 trait CoreSuite extends DisciplineSuite with AssertionsF with ScalacheckGens:
   override def munitValueTransforms: List[ValueTransform] =

@@ -1,60 +1,63 @@
 package core.elevator
 
-import cats.{Monad, Order, Show}
+import cats.mtl.{Ask, Raise}
+
 import cats.derived.derived
 import cats.instances.list.*
-import cats.mtl.{Ask, Raise, Stateful}
 import cats.syntax.applicative.*
 import cats.syntax.apply.*
 import cats.syntax.either.*
 import cats.syntax.flatMap.*
 import cats.syntax.functor.*
 import cats.syntax.option.*
+import cats.{Monad, Order, Show}
+
+import classy.mtl.AtomicState
+import classy.mtl.all.*
 
 import Elevator.*
 
 class Elevator[F[_]](
-  val elevatorId: ElevatorId,
-  floorDoors: FloorDoorsAlg[F],
-  floorManager: FloorManagerAlg[F],
-  simulation: SimulationAlg[F]
+    val elevatorId: ElevatorId,
+    floorDoors: FloorDoorsAlg[F],
+    floorManager: FloorManagerAlg[F],
+    simulation: SimulationAlg[F]
 )(using
-  F: Monad[F],
-  R: Raise[F, ElevatorError],
-  S: Stateful[F, Map[ElevatorId, ElevatorState]]
+    F: Monad[F],
+    R: Raise[F, ElevatorError],
+    S: AtomicState[F, Map[ElevatorId, ElevatorState]]
 ) extends ElevatorAlg[F]:
-  private[elevator] def getState: F[ElevatorState] =
-    S.get.flatMap(_.get(elevatorId).fold(R.raise(ElevatorError.StateNotFound))(_.pure))
+  private def getState: F[ElevatorState] = S.get.flatMap(_.get(elevatorId).liftToT(ElevatorError.StateNotFound))
 
-  // Unfortunately, Stateful does not have an atomic modify+get
-  // https://github.com/typelevel/cats-mtl/pull/120
-  private[elevator] def state[B](modify: ElevatorState => (ElevatorState, B)): F[B] =
-    for
-      s      <- getState
-      (s2, b) = modify(s)
-      _      <- S.modify(xs => xs + (elevatorId -> s2))
-    yield b
+  private def modify[B](f: ElevatorState => (ElevatorState, B)): F[B] =
+    S.modify { all =>
+      all.get(elevatorId) match
+        case None => (all, None)
+        case Some(state) =>
+          val (s, b) = f(state)
+          (all + (elevatorId -> s), Some(b))
+    }.flatMap(_.liftToT(ElevatorError.StateNotFound))
 
   def distance(from: Floor): F[Option[Distance]] =
     getState.map(ElevatorState.distance(from))
 
   def call(floor: Floor): F[Unit] =
-    state(s => ElevatorState.call(floor)(s) -> ())
+    modify(s => ElevatorState.call(floor)(s) -> ())
 
   def getOn(passenger: Passenger): F[Unit] =
-    state(s => ElevatorState.getOn(passenger)(s) -> ()) *>
+    modify(s => ElevatorState.getOn(passenger)(s) -> ()) *>
       floorDoors.await(passenger.to)
 
   def start: F[Unit] = {
     val move =
       for
-        next <- state { s =>
-                  val next = ElevatorState.move1Floor(s)
-                  (next.state, next)
-                }
-        _    <- F.whenA(next.arrived) {
-                  floorManager.arrived(next.state.floor) *> floorDoors.awake(next.state.floor)
-                }
+        next <- modify { s =>
+          val next = ElevatorState.move1Floor(s)
+          (next.state, next)
+        }
+        _ <- F.whenA(next.arrived) {
+          floorManager.arrived(next.state.floor) *> floorDoors.awake(next.state.floor)
+        }
       yield ()
 
     F.tailRecM(())(_ => simulation.isRunning.ifM(simulation.sleepTick >> move.map(_.asLeft), ().asRight.pure))
@@ -65,7 +68,7 @@ object Elevator:
   enum Direction(int: Int) derives CanEqual:
     val asInt: Int = int
 
-    case Up   extends Direction(1)
+    case Up extends Direction(1)
     case Down extends Direction(-1)
     case Wait extends Direction(0)
 
@@ -82,9 +85,9 @@ object Elevator:
     case CallDestination(override val floor: Floor) extends Destination(floor)
 
   case class ElevatorState(
-    id: ElevatorId,
-    floor: Floor,
-    destinations: List[Destination]
+      id: ElevatorId,
+      floor: Floor,
+      destinations: List[Destination]
   )
   object ElevatorState:
     def apply(id: ElevatorId): ElevatorState = apply(id, 0, List())
@@ -110,12 +113,12 @@ object Elevator:
       state => state.copy(destinations = Destination.PassengerDestination(passenger) +: state.destinations)
 
     case class AfterMoving(
-      state: ElevatorState,
-      direction: Direction,
-      arrived: Boolean
+        state: ElevatorState,
+        direction: Direction,
+        arrived: Boolean
     )
-    def move1Floor(state: ElevatorState): AfterMoving               =
-      val direct    = direction(state)
+    def move1Floor(state: ElevatorState): AfterMoving =
+      val direct = direction(state)
       val nextFloor = state.floor + direct.asInt
 
       val (leaving, stay) = state.destinations.partition(_.floor == nextFloor)

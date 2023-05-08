@@ -1,20 +1,22 @@
 package core.elevator
 
-import cats.{Monad, Show}
-import cats.derived.derived
 import cats.mtl.{Raise, Stateful}
+
+import cats.derived.derived
 import cats.syntax.flatMap.*
 import cats.syntax.functor.*
+import cats.{Functor, Show}
+
+import classy.mtl.AtomicState
 
 import Simulation.*
 
-abstract class Simulation[F[_]: Monad](using
-  S: Stateful[F, SimulationState]
-) extends SimulationAlg[F] {
+abstract class Simulation[F[_]: Functor](using
+    S: AtomicState[F, SimulationState]
+) extends SimulationAlg[F]:
   def isRunning: F[Boolean] = S.get.map(_.status == SimulationStatus.Running)
-  def start: F[Unit]        = S.modify(_.copy(status = SimulationStatus.Running))
-  def stop: F[Unit]         = S.modify(_.copy(status = SimulationStatus.Stopped))
-}
+  def start: F[Unit] = S.update(_.copy(status = SimulationStatus.Running))
+  def stop: F[Unit] = S.update(_.copy(status = SimulationStatus.Stopped))
 
 object Simulation:
   case class SimulationState(status: SimulationStatus = SimulationStatus.Stopped)

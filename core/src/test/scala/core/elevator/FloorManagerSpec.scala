@@ -4,6 +4,7 @@ import cats.syntax.applicative.*
 import cats.syntax.apply.*
 import cats.syntax.flatMap.*
 import cats.syntax.functor.*
+
 import core.elevator.Elevator.*
 import core.mtl.given
 import core.test.*

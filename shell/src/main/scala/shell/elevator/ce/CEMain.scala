@@ -1,20 +1,25 @@
 package shell.elevator.ce
 
-import cats.effect.{Async, IO, IOApp, Resource}
+import scala.collection.immutable.IntMap
+import scala.concurrent.duration.DurationInt
+
 import cats.effect.std.Console
-import cats.mtl.{Ask, Stateful}
+import cats.effect.{Async, IO, IOApp, Resource}
+
+import cats.mtl.Ask
+
 import cats.syntax.apply.*
 import cats.syntax.bifunctor.*
 import cats.syntax.flatMap.*
 import cats.syntax.functor.*
+
 import core.elevator.*
-import fs2.Stream
+
 import shell.elevator.ce.app.{*, given}
 import shell.elevator.ce.appt.*
 import shell.elevator.ce.mtl.{*, given}
 
-import scala.collection.immutable.IntMap
-import scala.concurrent.duration.DurationInt
+import fs2.Stream
 
 object CEMain extends IOApp.Simple:
   val run = runApp(
@@ -39,20 +44,20 @@ object CEMain extends IOApp.Simple:
     CEInterpreters
       .interpreters[AppT]
       .use(xs => program(xs.system))
-      .run      // AppT
+      .run // AppT
       .leftMap(UncaughtAppError.apply)
       .rethrowT
       .run(env) // ReaderT
 
   def program[F[_]: Async: Console](system: SystemAlg[F])(using A: Ask[F, AppEnv]): F[Unit] =
     for
-      env                  <- A.ask
+      env <- A.ask
       (duration, low, high) =
         (env.duration, env.floorManagerEnv.lowestFloor, env.floorManagerEnv.highestFloor)
-      _                    <- system.start
-      input                 = data.passengers[F](low, high, duration)
-      _                    <- simulate(input, system)
-      _                    <- system.gracefully
+      _ <- system.start
+      input = data.passengers[F](low, high, duration)
+      _ <- simulate(input, system)
+      _ <- system.gracefully
     yield ()
 
   def simulate[F[_]: Async](input: Stream[F, Passenger], system: SystemAlg[F])(using C: Console[F]): F[Unit] =

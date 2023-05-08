@@ -1,10 +1,11 @@
 package core.elevator
 
-import cats.{Monad, Show}
-import cats.derived.derived
 import cats.mtl.Ask
+
+import cats.derived.derived
 import cats.syntax.flatMap.*
 import cats.syntax.functor.*
+import cats.{Monad, Show}
 
 import FloorManager.*
 

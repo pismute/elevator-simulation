@@ -3,6 +3,7 @@ package core
 import cats.Semigroup
 import cats.kernel.laws.discipline.*
 import cats.syntax.semigroup.*
+
 import core.semigroups.{*, given}
 import core.test.*
 import org.scalacheck.Arbitrary

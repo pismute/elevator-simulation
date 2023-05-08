@@ -1,12 +1,13 @@
 package shell.elevator.ce
 
-import cats.effect.Async
-import core.elevator.*
-import fs2.Stream
-
 import scala.annotation.tailrec
 import scala.concurrent.duration.{DurationDouble, FiniteDuration}
 import scala.util.Random
+
+import cats.effect.Async
+
+import core.elevator.*
+import fs2.Stream
 
 object data:
   @tailrec
