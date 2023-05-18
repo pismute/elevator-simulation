@@ -1,6 +1,7 @@
 package shell.test
 
-import core.test.CoreSuite
 import munit.CatsEffectSuite
+
+import core.test.CoreSuite
 
 trait CatsEffectShellSuite extends CatsEffectSuite with CoreSuite

@@ -1,8 +1,5 @@
 package shell.elevator.ce
 
-import core.elevator.*
-import core.mtl.*
-
 import scala.collection.immutable.IntMap
 
 import cats.effect.{Async, Deferred, Ref}
@@ -14,6 +11,10 @@ import cats.syntax.traverse.*
 
 import alleycats.std.iterable.*
 
+import classy.mtl.*
+
+import core.elevator.*
+
 class CEFloorDoors[F[_]: Async](
     doors: Ref[F, IntMap[Deferred[F, Unit]]]
 )(using
@@ -22,7 +23,7 @@ class CEFloorDoors[F[_]: Async](
   def await(floor: Floor): F[Unit] =
     for
       map <- doors.get
-      deferred <- map.get(floor).liftToT(CEFloorDoors.CEFloorDoorsError.FloorNotFound(floor))
+      deferred <- map.get(floor).liftTo(CEFloorDoors.CEFloorDoorsError.FloorNotFound(floor))
       _ <- deferred.get
     yield ()
 
@@ -34,7 +35,7 @@ class CEFloorDoors[F[_]: Async](
           case Some(deferred) => (map + (floor -> Deferred.unsafe[F, Unit]), Some(deferred))
         }
       }
-      deferred <- maybeDeferred.liftToT(CEFloorDoors.CEFloorDoorsError.FloorNotFound(floor))
+      deferred <- maybeDeferred.liftTo(CEFloorDoors.CEFloorDoorsError.FloorNotFound(floor))
       _ <- deferred.complete(())
     yield ()
 

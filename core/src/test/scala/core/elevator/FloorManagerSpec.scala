@@ -5,11 +5,10 @@ import cats.syntax.apply.*
 import cats.syntax.flatMap.*
 import cats.syntax.functor.*
 
-import core.elevator.Elevator.*
-import core.mtl.given
-import core.test.*
-
 import TestAppSuite.{*, given}
+
+import core.elevator.Elevator.*
+import core.test.*
 
 class FloorManagerSpec extends TestAppSuite:
   test("The floorManager can validate a floor") {

@@ -1,27 +1,26 @@
 package shell.elevator.ce
 
 import java.util.concurrent.TimeUnit
+
 import scala.concurrent.duration.FiniteDuration
-
-import cats.effect.implicits.*
-import cats.effect.{Fiber, Spawn, Temporal}
-
-import cats.mtl.{Ask, Raise, Tell}
 
 import cats.Parallel
 import cats.derived.{derived, ShowPretty}
+import cats.effect.{Fiber, Spawn, Temporal}
+import cats.effect.implicits.*
 import cats.instances.list.*
+import cats.mtl.{Ask, Raise, Tell}
 import cats.syntax.flatMap.*
 import cats.syntax.functor.*
 import cats.syntax.parallel.*
 import cats.syntax.show.*
 import cats.syntax.traverse.*
 
-import core.elevator.*
-
-import classy.ce3.all.{*, given}
-import classy.mtl.AtomicState
 import org.typelevel.cats.time.*
+
+import classy.effect.*
+
+import core.elevator.*
 
 class CEMatrixSystem[F[_]](inner: SystemAlg[F])(using
     F: Temporal[F],

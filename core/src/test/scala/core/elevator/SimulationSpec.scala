@@ -1,15 +1,13 @@
 package core.elevator
 
-import core.mtl.given
-import core.test.*
-
 import cats.syntax.applicative.*
 import cats.syntax.apply.*
 import cats.syntax.flatMap.*
 import cats.syntax.functor.*
 
 import TestAppSuite.{*, given}
-import classy.mtl.all.{*, given}
+
+import core.test.*
 
 class SimulationSpec extends TestAppSuite:
   test("Simulation status can be changed") {

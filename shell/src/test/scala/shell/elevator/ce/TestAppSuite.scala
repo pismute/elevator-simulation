@@ -2,20 +2,20 @@ package shell.elevator.ce
 
 import scala.concurrent.duration.DurationInt
 
+import cats.{Applicative, Functor, Monad, Show}
 import cats.effect.IO
-
 import cats.mtl.Tell
-
 import cats.syntax.apply.*
 import cats.syntax.either.*
 import cats.syntax.flatMap.*
 import cats.syntax.functor.*
 import cats.syntax.show.*
-import cats.{Applicative, Functor, Monad, Show}
+
+import munit.*
 
 import core.elevator.*
 import core.test.*
-import munit.*
+
 import shell.elevator.ce.app.*
 import shell.elevator.ce.appt.*
 import shell.test.CatsEffectShellSuite
@@ -48,8 +48,8 @@ trait TestAppSuite extends CatsEffectShellSuite:
   )
 
   def runAppT[A](env: AppEnv)(f: => AppT[A])(using loc: Location): IO[A] =
-    f.run       // AppT
-      .value    // EitherT
+    f.run // AppT
+      .value // EitherT
       .map {
         case Left(err) => fail(show"$err")
         case Right(v)  => v
@@ -58,7 +58,7 @@ trait TestAppSuite extends CatsEffectShellSuite:
 
   // shut up the report in tests
   given [F[_], L: Show](using F: Applicative[F]): Tell[F, L] with
-    val functor: Functor[F]                 = summon
+    val functor: Functor[F] = summon
     override inline def tell(l: L): F[Unit] = F.unit
 
 end TestAppSuite

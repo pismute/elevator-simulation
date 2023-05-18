@@ -6,14 +6,10 @@ import cats.syntax.flatMap.*
 import cats.syntax.functor.*
 import cats.syntax.show.*
 
-import core.elevator.Elevator.*
-import core.mtl.given
-import core.test.*
-
-import classy.mtl.AtomicState
-import classy.mtl.all.{*, given}
-
 import TestAppSuite.{*, given}
+
+import core.elevator.Elevator.*
+import core.test.*
 
 class ElevatorSpec extends TestAppSuite:
   test("An elevator should return distance from a current floor") {

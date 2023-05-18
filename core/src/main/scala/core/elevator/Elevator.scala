@@ -1,21 +1,19 @@
 package core.elevator
 
-import cats.mtl.{Ask, Raise}
-
+import cats.{Monad, Order, Show}
 import cats.derived.derived
 import cats.instances.list.*
+import cats.mtl.{Ask, Raise}
 import cats.syntax.applicative.*
 import cats.syntax.apply.*
 import cats.syntax.either.*
 import cats.syntax.flatMap.*
 import cats.syntax.functor.*
 import cats.syntax.option.*
-import cats.{Monad, Order, Show}
-
-import classy.mtl.AtomicState
-import classy.mtl.all.*
 
 import Elevator.*
+
+import classy.mtl.*
 
 class Elevator[F[_]](
     val elevatorId: ElevatorId,
@@ -27,7 +25,7 @@ class Elevator[F[_]](
     R: Raise[F, ElevatorError],
     S: AtomicState[F, Map[ElevatorId, ElevatorState]]
 ) extends ElevatorAlg[F]:
-  private def getState: F[ElevatorState] = S.get.flatMap(_.get(elevatorId).liftToT(ElevatorError.StateNotFound))
+  private def getState: F[ElevatorState] = S.get.flatMap(_.get(elevatorId).liftTo(ElevatorError.StateNotFound))
 
   private def modify[B](f: ElevatorState => (ElevatorState, B)): F[B] =
     S.modify { all =>
@@ -36,7 +34,7 @@ class Elevator[F[_]](
         case Some(state) =>
           val (s, b) = f(state)
           (all + (elevatorId -> s), Some(b))
-    }.flatMap(_.liftToT(ElevatorError.StateNotFound))
+    }.flatMap(_.liftTo(ElevatorError.StateNotFound))
 
   def distance(from: Floor): F[Option[Distance]] =
     getState.map(ElevatorState.distance(from))

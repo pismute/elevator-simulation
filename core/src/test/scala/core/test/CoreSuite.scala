@@ -3,11 +3,12 @@ package core.test
 import scala.compiletime.*
 import scala.concurrent.Future
 
-import cats.syntax.functor.*
 import cats.{Eval, Functor}
+import cats.syntax.functor.*
+
+import org.scalacheck.Gen
 
 import munit.*
-import org.scalacheck.Gen
 
 trait CoreSuite extends DisciplineSuite with AssertionsF with ScalacheckGens:
   override def munitValueTransforms: List[ValueTransform] =
@@ -25,17 +26,17 @@ trait CoreSuite extends DisciplineSuite with AssertionsF with ScalacheckGens:
 
 trait AssertionsF { self: Assertions =>
   def assertEqualsF[F[_]: Functor, A, B](
-    obtained: F[A],
-    expected: B,
-    clue: => Any = "values are not the same"
+      obtained: F[A],
+      expected: B,
+      clue: => Any = "values are not the same"
   )(using loc: Location, compare: Compare[A, B]): F[Unit] =
     obtained.map(a => assertEquals(a, expected, clue))
 
   // `extension [F[_]: Functor, A](obtained: F[A])` doesn't work
   implicit class AssertionsFOps[F[_]: Functor, A](obtained: F[A]):
     def assertEquals[B](
-      expected: B,
-      clue: => Any = "values are not the same"
+        expected: B,
+        clue: => Any = "values are not the same"
     )(using loc: Location, compare: Compare[A, B]): F[Unit] =
       assertEqualsF(obtained, expected, clue)
 }

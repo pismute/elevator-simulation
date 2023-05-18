@@ -1,18 +1,17 @@
 package core.elevator
 
-import cats.mtl.Ask
-
+import cats.{Monad, Show}
 import cats.derived.derived
+import cats.mtl.Ask
 import cats.syntax.flatMap.*
 import cats.syntax.functor.*
-import cats.{Monad, Show}
 
 import FloorManager.*
 
 class FloorManager[F[_]: Monad](
-  floorDoors: FloorDoorsAlg[F]
+    floorDoors: FloorDoorsAlg[F]
 )(using
-  A: Ask[F, FloorManagerEnv]
+    A: Ask[F, FloorManagerEnv]
 ) extends FloorManagerAlg[F]:
   def waitOn(floor: Floor): F[Unit] = floorDoors.await(floor)
 
@@ -26,6 +25,6 @@ class FloorManager[F[_]: Monad](
 
 object FloorManager:
   case class FloorManagerEnv(
-    lowestFloor: Floor,
-    highestFloor: Floor
+      lowestFloor: Floor,
+      highestFloor: Floor
   ) derives Show

@@ -1,11 +1,5 @@
 package shell.elevator.ce
 
-import core.elevator.*
-import core.mtl.*
-
-import shell.elevator.ce.app.{*, given}
-import shell.elevator.ce.mtl.*
-
 import cats.{Monad, Parallel}
 import cats.effect.{Async, Ref, Resource, Temporal}
 import cats.effect.std.Console
@@ -13,9 +7,12 @@ import cats.mtl.{Ask, Raise, Tell}
 import cats.syntax.flatMap.*
 import cats.syntax.functor.*
 
-import classy.ce3.all.*
-import classy.mtl.AtomicState
-import classy.mtl.all.{*, given}
+import classy.effect.*
+
+import core.elevator.*
+
+import shell.elevator.ce.app.{*, given}
+import shell.elevator.ce.mtl.*
 
 final case class CEInterpreters[F[_]](
     simulation: SimulationAlg[F],
@@ -36,7 +33,7 @@ object CEInterpreters:
   def simulation[F[_]](using
       F: Temporal[F],
       A: Ask[F, CESimulation.CESimulationEnv],
-      S: AtomicState[F, Simulation.SimulationState]
+      S: Ref[F, Simulation.SimulationState]
   ): Resource[F, SimulationAlg[F]] = Resource.pure(CESimulation())
 
   def floorManager[F[_]: Monad](floorDoors: FloorDoorsAlg[F])(using
@@ -50,7 +47,7 @@ object CEInterpreters:
   )(using
       F: Monad[F],
       R: Raise[F, Elevator.ElevatorError],
-      S: AtomicState[F, Map[ElevatorId, Elevator.ElevatorState]]
+      S: Ref[F, Map[ElevatorId, Elevator.ElevatorState]]
   ): Resource[F, List[ElevatorAlg[F]]] =
     Resource.eval(
       S.get.map { xs =>
@@ -65,8 +62,8 @@ object CEInterpreters:
   )(using
       F: Temporal[F],
       R: Raise[F, System.SystemError],
-      S1: AtomicState[F, CEMatrixSystem.CEMatrixSystemState],
-      S2: AtomicState[F, CEFiberSystem.CEFiberSystemState[F]],
+      S1: Ref[F, CEMatrixSystem.CEMatrixSystemState],
+      S2: Ref[F, CEFiberSystem.CEFiberSystemState[F]],
       T: Tell[F, CEMatrixSystem.CEMatrixSystemReport]
   ): Resource[F, SystemAlg[F]] =
     Resource.pure {
@@ -80,19 +77,18 @@ object CEInterpreters:
       R: Raise[F, AppError],
       T: Tell[F, CEMatrixSystem.CEMatrixSystemReport]
   ): Resource[F, CEInterpreters[F]] =
-    for
+    for {
       env <- Resource.eval(A.ask)
-      stateRef <- appState(env)
-      given AtomicState[F, AppState[F]] = stateRef.atomicState
+      given Ref[F, AppState[F]] <- appState(env)
       simulation <- simulation[F]
       doorsForFloor <- floorDoors[F](env.floorManagerEnv.lowestFloor, env.floorManagerEnv.highestFloor)
       floorManager <- floorManager[F](doorsForFloor)
       doorsForElevators <- floorDoors[F](env.floorManagerEnv.lowestFloor, env.floorManagerEnv.highestFloor)
       elevators <- elevators[F](doorsForElevators, floorManager, simulation)
       system <- system[F](elevators, floorManager, simulation)
-    yield CEInterpreters(simulation, floorManager, system)
+    } yield CEInterpreters(simulation, floorManager, system)
 
-  def appState[F[_]: Async](env: AppEnv): Resource[F, Ref[F, AppState[F]]] = {
+  def appState[F[_]: Async](env: AppEnv): Resource[F, Ref[F, AppState[F]]] =
     val elevator = (0 until env.nrOfElevators).map { _ =>
       val id = ElevatorId.random()
 
@@ -116,4 +112,5 @@ object CEInterpreters:
     )
 
     Resource.eval(Ref[F].of(appState))
-  }
+
+end CEInterpreters

@@ -12,6 +12,6 @@ object semigroups:
       def apply[A](x: A): Min[A] = x
 
       given [A: Order]: Semigroup[Min[A]] = Semigroup.instance(Order[A].min)
-      given [A: Eq]: Eq[Min[A]]           = Eq[A]
+      given [A: Eq]: Eq[Min[A]] = Eq[A]
 
   export min.*

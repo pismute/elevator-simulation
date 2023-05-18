@@ -1,27 +1,26 @@
 package core.elevator
 
-import cats.mtl.Raise
-
+import cats.{Monad, Order, Show}
 import cats.derived.derived
+import cats.mtl.Raise
 import cats.syntax.applicative.*
 import cats.syntax.apply.*
 import cats.syntax.flatMap.*
 import cats.syntax.foldable.*
 import cats.syntax.functor.*
 import cats.syntax.traverse.*
-import cats.{Monad, Order, Show}
-
-import core.semigroups.*
 
 import System.*
 
+import core.semigroups.*
+
 class System[F[_]](
-  val elevators: List[ElevatorAlg[F]],
-  floorManager: FloorManagerAlg[F],
-  simulation: SimulationAlg[F]
+    val elevators: List[ElevatorAlg[F]],
+    floorManager: FloorManagerAlg[F],
+    simulation: SimulationAlg[F]
 )(using
-  F: Monad[F],
-  R: Raise[F, SystemError]
+    F: Monad[F],
+    R: Raise[F, SystemError]
 ) extends SystemAlg[F]:
   def validate(passenger: Passenger): F[Unit] =
     floorManager
@@ -43,17 +42,17 @@ class System[F[_]](
   // So it returns when the passenger got arrived the destination floor(passenger.to)
   def newPassenger(passenger: Passenger): F[Unit] =
     for
-      _        <- validate(passenger)
+      _ <- validate(passenger)
       // keep trying to find if unavailable
       elevator <- findClosest(passenger.from).tailRecM(
-                    _.map(_.toRight(simulation.sleepTick >> findClosest(passenger.from)))
-                  )
-      _        <- elevator.call(passenger.from)
-      _        <- floorManager.waitOn(passenger.from)
-      _        <- elevator.getOn(passenger)
+        _.map(_.toRight(simulation.sleepTick >> findClosest(passenger.from)))
+      )
+      _ <- elevator.call(passenger.from)
+      _ <- floorManager.waitOn(passenger.from)
+      _ <- elevator.getOn(passenger)
     yield ()
 
-  def start: F[Unit]      = simulation.start
+  def start: F[Unit] = simulation.start
   def gracefully: F[Unit] = simulation.stop *> floorManager.openAllDoors
 
 object System:

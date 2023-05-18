@@ -4,9 +4,10 @@ import cats.Semigroup
 import cats.kernel.laws.discipline.*
 import cats.syntax.semigroup.*
 
+import org.scalacheck.Arbitrary
+
 import core.semigroups.{*, given}
 import core.test.*
-import org.scalacheck.Arbitrary
 
 class SemigroupsSpec extends CoreSuite:
   given [A: Arbitrary]: Arbitrary[Min[A]] = Arbitrary(Arbitrary.arbitrary[A].map(Min[A]))

@@ -1,15 +1,13 @@
 package shell.elevator.ce
 
-import core.elevator.*
-
 import scala.concurrent.duration.FiniteDuration
 
-import cats.effect.Temporal
-import cats.mtl.{Ask, Raise}
+import cats.effect.{Ref, Temporal}
+import cats.mtl.Ask
 import cats.syntax.flatMap.*
 import cats.syntax.functor.*
 
-import classy.mtl.AtomicState
+import core.elevator.*
 
 class CESimulation[F[_]](using
     F: Temporal[F],

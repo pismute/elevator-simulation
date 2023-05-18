@@ -5,17 +5,16 @@ import cats.syntax.apply.*
 import cats.syntax.flatMap.*
 import cats.syntax.functor.*
 
-import core.mtl.given
-import core.test.*
-
 import TestAppSuite.{*, given}
+
+import core.test.*
 
 class SystemSpec extends TestAppSuite:
   test("System can validate a passenger") {
     runAppT(appEnv, appState) {
       for
         system <- mkSimpleSystem[AppT]
-        _      <-
+        _ <-
           system.validate(
             Passenger.fromFloors(
               appEnv.floorManagerEnv.lowestFloor,
@@ -30,7 +29,7 @@ class SystemSpec extends TestAppSuite:
     runAppT(appEnv, appState) {
       for
         system <- mkSimpleSystem[AppT]
-        _      <-
+        _ <-
           system.validate(
             Passenger.fromFloors(
               appEnv.floorManagerEnv.lowestFloor - 1,
@@ -45,7 +44,7 @@ class SystemSpec extends TestAppSuite:
     runAppT(appEnv, appState) {
       for
         system <- mkSimpleSystem[AppT]
-        _      <-
+        _ <-
           system.validate(
             Passenger.fromFloors(
               appEnv.floorManagerEnv.lowestFloor,
@@ -60,7 +59,7 @@ class SystemSpec extends TestAppSuite:
     runAppT(appEnv, appState) {
       for
         system <- mkSimpleSystem[AppT]
-        _      <-
+        _ <-
           system.validate(
             Passenger.fromFloors(
               appEnv.floorManagerEnv.lowestFloor,
@@ -72,8 +71,8 @@ class SystemSpec extends TestAppSuite:
   }
 
   test("System should find the closest elevator") {
-    val elevatorId1  = ElevatorId.random()
-    val elevatorId2  = ElevatorId.random()
+    val elevatorId1 = ElevatorId.random()
+    val elevatorId2 = ElevatorId.random()
     val twoElevators = AppState(
       testSimulationState = TestSimulationState(simulationState = Simulation.SimulationState(), sleepCount = 10),
       elevatorStates = Map(
@@ -92,11 +91,11 @@ class SystemSpec extends TestAppSuite:
 
     runAppT(appEnv, twoElevators) {
       for
-        system    <- mkSimpleSystem[AppT]
-        elevator  <- system.findClosest(1)
-        _          = elevator.map(_.elevatorId).assertEquals(elevatorId1)
+        system <- mkSimpleSystem[AppT]
+        elevator <- system.findClosest(1)
+        _ = elevator.map(_.elevatorId).assertEquals(elevatorId1)
         elevator2 <- system.findClosest(4)
-        _          = elevator2.map(_.elevatorId).assertEquals(elevatorId2)
+        _ = elevator2.map(_.elevatorId).assertEquals(elevatorId2)
       yield ()
     }
   }

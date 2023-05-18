@@ -1,4 +1,7 @@
+import scala.Ordering.Implicits._
+
 import _root_.io.github.davidgregory084.ScalacOption
+import _root_.io.github.davidgregory084.ScalaVersion.*
 
 name := "elevator-simulation"
 
@@ -15,42 +18,20 @@ ThisBuild / scalafixDependencies += "org.typelevel" %% "typelevel-scalafix-http4
 ThisBuild / testFrameworks += new TestFramework("munit.Framework")
 
 val extraScalacOptions = Set(
-  new ScalacOption("-indent", Nil, _ => true),
-  new ScalacOption("-new-syntax", Nil, _ => true),
+  ScalacOption("-indent", Nil, _ >= V3_0_0),
+  ScalacOption("-new-syntax", Nil, _ >= V3_0_0),
   ScalacOptions.sourceFuture,
   ScalacOptions.languageFeatureOption("strictEquaility")
 )
 
-val checkMacroScalacOption = ScalacOptions.advancedOption("check-macros", _ => true)
-
-val mtl = project.settings(
-  name := "classy-mtl",
-  tpolecatScalacOptions ++= extraScalacOptions,
-  tpolecatDevModeOptions += checkMacroScalacOption,
-  libraryDependencies ++= Seq(
-    "org.typelevel" %% "cats-mtl" % "1.3.1"
-  )
-)
-
-val ce3 = project
-  .dependsOn(mtl)
-  .settings(
-    name := "classy-ce3",
-    tpolecatScalacOptions ++= extraScalacOptions,
-    libraryDependencies ++= Seq(
-      "org.typelevel" %% "cats-effect" % "3.4.10"
-    )
-  )
-
 val core = project
-  .dependsOn(mtl)
   .settings(
     tpolecatScalacOptions ++= extraScalacOptions,
     Settings.core
   )
 
 val shell = project
-  .dependsOn(ce3, core % s"$Compile->$Compile;$Test->$Test")
+  .dependsOn(core % s"$Compile->$Compile;$Test->$Test")
   .configs(IntegrationTest)
   .settings(
     tpolecatScalacOptions ++= extraScalacOptions,
@@ -60,8 +41,6 @@ val shell = project
 
 val root = (project in file("."))
   .aggregate(
-    mtl,
-    ce3,
     core,
     shell
   )

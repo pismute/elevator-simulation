@@ -6,8 +6,9 @@ import scala.util.Random
 
 import cats.effect.Async
 
-import core.elevator.*
 import fs2.Stream
+
+import core.elevator.*
 
 object data:
   @tailrec
