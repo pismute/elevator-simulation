@@ -9,7 +9,7 @@ import cats.syntax.flatMap.*
 import cats.syntax.functor.*
 import cats.syntax.show.*
 
-import TestAppSuite.*
+import TestAppSuite.{*, given}
 import munit.*
 
 import classy.mtl.*
@@ -65,10 +65,12 @@ object TestAppSuite:
   given [F[_]: Functor](using AtomicState[F, AppState]): AtomicState[F, Map[ElevatorId, Elevator.ElevatorState]] =
     AtomicState.deriveAtomicState
 
-  enum AppError derives Show:
-    case AppElevatorError(error: Elevator.ElevatorError)
-    case AppSystemError(error: System.SystemError)
-  given [F[_], A](using Handle[F, AppError], Prism[AppError, A]): Handle[F, A] = deriveHandle
+  type AppError = Elevator.ElevatorError | System.SystemError
+
+  given Show[AppError] = Show.show {
+    case e: Elevator.ElevatorError => summon[Show[Elevator.ElevatorError]].show(e)
+    case e: System.SystemError     => summon[Show[System.SystemError]].show(e)
+  }
 
   object appt:
     private type App[A] = EitherT[ReaderT[StateT[Eval, AppState, *], AppEnv, *], AppError, A]

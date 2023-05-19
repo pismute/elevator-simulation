@@ -17,7 +17,7 @@ import munit.*
 import core.elevator.*
 import core.test.*
 
-import shell.elevator.ce.app.*
+import shell.elevator.ce.app.{*, given}
 import shell.elevator.ce.appt.*
 import shell.test.CatsEffectShellSuite
 
@@ -47,14 +47,6 @@ trait TestAppSuite extends CatsEffectShellSuite:
       passengerFibers = List()
     )
   )
-
-  type AppError = Elevator.ElevatorError | System.SystemError | CEFloorDoors.CEFloorDoorsError
-
-  given Show[AppError] = Show.show {
-    case e: Elevator.ElevatorError         => summon[Show[Elevator.ElevatorError]].show(e)
-    case e: System.SystemError             => summon[Show[System.SystemError]].show(e)
-    case e: CEFloorDoors.CEFloorDoorsError => summon[Show[CEFloorDoors.CEFloorDoorsError]].show(e)
-  }
 
   def runAppT[A](env: AppEnv)(f: => AppT[A])(using loc: Location): IO[A] =
     f.run // AppT
