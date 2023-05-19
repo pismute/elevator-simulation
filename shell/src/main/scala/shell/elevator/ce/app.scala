@@ -37,10 +37,10 @@ object app:
   given [F[_]: Functor](using Ref[F, AppState[F]]): Ref[F, CEFiberSystem.CEFiberSystemState[F]] = deriveRef
   given [F[_], A](using NotGiven[AtomicState[F, A]], Ref[F, A]): AtomicState[F, A] = AtomicStateFromRef(summon)
 
-  enum AppError derives Show:
-    case AppElevatorError(error: Elevator.ElevatorError)
-    case AppSystemError(error: System.SystemError)
-    case AppCEFloorDoors(error: CEFloorDoors.CEFloorDoorsError)
-  given [F[_]](using Raise[F, AppError]): Raise[F, Elevator.ElevatorError] = deriveRaise
-  given [F[_]](using Raise[F, AppError]): Raise[F, System.SystemError] = deriveRaise
-  given [F[_]](using Raise[F, AppError]): Raise[F, CEFloorDoors.CEFloorDoorsError] = deriveRaise
+  type AppError = Elevator.ElevatorError | System.SystemError | CEFloorDoors.CEFloorDoorsError
+
+  inline given Show[AppError] = Show.show {
+    case e: Elevator.ElevatorError         => summon[Show[Elevator.ElevatorError]].show(e)
+    case e: System.SystemError             => summon[Show[System.SystemError]].show(e)
+    case e: CEFloorDoors.CEFloorDoorsError => summon[Show[CEFloorDoors.CEFloorDoorsError]].show(e)
+  }

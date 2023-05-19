@@ -1,5 +1,6 @@
 package shell.elevator.ce
 
+import scala.compiletime.*
 import scala.concurrent.duration.DurationInt
 
 import cats.{Applicative, Functor, Monad, Show}
@@ -46,6 +47,14 @@ trait TestAppSuite extends CatsEffectShellSuite:
       passengerFibers = List()
     )
   )
+
+  type AppError = Elevator.ElevatorError | System.SystemError | CEFloorDoors.CEFloorDoorsError
+
+  given Show[AppError] = Show.show {
+    case e: Elevator.ElevatorError         => summon[Show[Elevator.ElevatorError]].show(e)
+    case e: System.SystemError             => summon[Show[System.SystemError]].show(e)
+    case e: CEFloorDoors.CEFloorDoorsError => summon[Show[CEFloorDoors.CEFloorDoorsError]].show(e)
+  }
 
   def runAppT[A](env: AppEnv)(f: => AppT[A])(using loc: Location): IO[A] =
     f.run // AppT
