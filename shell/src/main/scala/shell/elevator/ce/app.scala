@@ -3,17 +3,15 @@ package shell.elevator.ce
 import scala.concurrent.duration.FiniteDuration
 import scala.util.NotGiven
 
-import cats.effect.Ref
-
-import cats.mtl.{Ask, Raise}
-
-import cats.derived.derived
 import cats.{Functor, Show}
-
-import core.elevator.*
+import cats.derived.derived
+import cats.effect.Ref
+import cats.mtl.{Ask, Raise}
 
 import classy.effect.*
 import classy.mtl.*
+
+import core.elevator.*
 
 object app:
   case class AppEnv(
