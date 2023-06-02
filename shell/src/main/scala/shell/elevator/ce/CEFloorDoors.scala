@@ -2,21 +2,20 @@ package shell.elevator.ce
 
 import scala.collection.immutable.IntMap
 
-import cats.effect.{Async, Deferred, Ref}
-
-import cats.mtl.Raise
-
 import cats.Show
 import cats.derived.derived
+import cats.effect.{Async, Deferred, Ref}
+import cats.mtl.Raise
 import cats.syntax.applicative.*
 import cats.syntax.flatMap.*
 import cats.syntax.functor.*
 import cats.syntax.traverse.*
 
-import core.elevator.*
-
 import alleycats.std.iterable.*
+
 import classy.mtl.*
+
+import core.elevator.*
 
 class CEFloorDoors[F[_]: Async](
     doors: Ref[F, IntMap[Deferred[F, Unit]]]

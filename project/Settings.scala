@@ -1,5 +1,5 @@
-import sbt.Keys.*
 import sbt.*
+import sbt.Keys.*
 
 object Settings {
   val coreTest: Seq[Setting[_]] = Seq.concat(
