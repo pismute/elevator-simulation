@@ -4,9 +4,8 @@ import scala.concurrent.duration.FiniteDuration
 import scala.util.NotGiven
 
 import cats.{Functor, Show}
-import cats.derived.derived
 import cats.effect.Ref
-import cats.mtl.{Ask, Raise}
+import cats.mtl.Ask
 
 import classy.effect.*
 import classy.mtl.*

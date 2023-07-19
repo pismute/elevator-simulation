@@ -3,8 +3,6 @@ package core.elevator
 import cats.{Eval, Functor, Monad, Show}
 import cats.data.{EitherT, ReaderT, StateT}
 import cats.mtl.{Ask, Handle, Stateful}
-import cats.syntax.either.*
-import cats.syntax.flatMap.*
 import cats.syntax.functor.*
 import cats.syntax.show.*
 

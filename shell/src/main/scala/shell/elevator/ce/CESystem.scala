@@ -9,16 +9,11 @@ import cats.derived.{derived, ShowPretty}
 import cats.effect.{Fiber, Spawn, Temporal}
 import cats.effect.implicits.*
 import cats.instances.list.*
-import cats.mtl.{Ask, Raise, Tell}
+import cats.mtl.Tell
 import cats.syntax.flatMap.*
 import cats.syntax.functor.*
 import cats.syntax.parallel.*
-import cats.syntax.show.*
 import cats.syntax.traverse.*
-
-import org.typelevel.cats.time.*
-
-import classy.effect.*
 
 import core.elevator.*
 

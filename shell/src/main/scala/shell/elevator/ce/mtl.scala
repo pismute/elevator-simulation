@@ -1,7 +1,6 @@
 package shell.elevator.ce
 
-import cats.{Applicative, Functor, Monad, Show}
-import cats.effect.Ref
+import cats.{Functor, Show}
 import cats.effect.std.Console
 import cats.mtl.Tell
 import cats.syntax.show.*

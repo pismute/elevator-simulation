@@ -5,20 +5,10 @@ import scala.concurrent.duration.DurationInt
 import cats.effect.IO
 import cats.effect.syntax.spawn.*
 import cats.effect.testkit.TestControl
-import cats.syntax.applicative.*
-import cats.syntax.apply.*
 import cats.syntax.flatMap.*
 import cats.syntax.functor.*
 
-import classy.mtl.*
-
-import core.elevator.Elevator.*
-import core.test.*
-
-import shell.elevator.ce.*
-import shell.elevator.ce.app.{*, given}
 import shell.elevator.ce.appt.*
-import shell.elevator.ce.mtl.*
 
 class CEFloorDoorsSpec extends TestAppSuite:
   test("It should throw error if a requested floor does not exist".fail) {

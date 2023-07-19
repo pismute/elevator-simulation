@@ -4,12 +4,8 @@ import cats.Parallel
 import cats.data.{EitherT, ReaderT}
 import cats.effect.{Async, IO, LiftIO}
 import cats.effect.std.Console
-import cats.effect.syntax.*
-import cats.mtl.{Ask, Raise, Stateful}
-import cats.syntax.flatMap.*
+import cats.mtl.{Ask, Raise}
 import cats.syntax.functor.*
-
-import core.elevator.*
 
 import shell.elevator.ce.app.*
 
