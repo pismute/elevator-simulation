@@ -2,10 +2,7 @@ package core.elevator
 
 import cats.{Eval, Functor, Monad, Show}
 import cats.data.{EitherT, ReaderT, StateT}
-import cats.derived.derived
-import cats.mtl.{Ask, Handle, Raise, Stateful}
-import cats.syntax.either.*
-import cats.syntax.flatMap.*
+import cats.mtl.{Ask, Handle, Stateful}
 import cats.syntax.functor.*
 import cats.syntax.show.*
 

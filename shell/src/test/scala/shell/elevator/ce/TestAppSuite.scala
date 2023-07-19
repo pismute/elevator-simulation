@@ -1,21 +1,15 @@
 package shell.elevator.ce
 
-import scala.compiletime.*
 import scala.concurrent.duration.DurationInt
 
-import cats.{Applicative, Functor, Monad, Show}
+import cats.{Applicative, Functor, Show}
 import cats.effect.IO
 import cats.mtl.Tell
-import cats.syntax.apply.*
-import cats.syntax.either.*
-import cats.syntax.flatMap.*
-import cats.syntax.functor.*
 import cats.syntax.show.*
 
 import munit.*
 
 import core.elevator.*
-import core.test.*
 
 import shell.elevator.ce.app.{*, given}
 import shell.elevator.ce.appt.*

@@ -2,7 +2,7 @@ package shell.elevator.ce
 
 import scala.concurrent.duration.FiniteDuration
 
-import cats.effect.{Ref, Temporal}
+import cats.effect.Temporal
 import cats.mtl.Ask
 import cats.syntax.flatMap.*
 import cats.syntax.functor.*

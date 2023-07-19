@@ -1,16 +1,10 @@
 package core.elevator
 
-import cats.{Applicative, Monad, Show}
-import cats.mtl.{Ask, Handle, Raise, Stateful}
-import cats.syntax.apply.*
-import cats.syntax.either.*
-import cats.syntax.flatMap.*
+import cats.{Applicative, Monad}
+import cats.mtl.{Ask, Handle, Raise}
 import cats.syntax.functor.*
 
 import TestAppSuite.{*, given}
-import munit.Location
-
-import classy.mtl.syntax.*
 
 def dummyFloorDoors[F[_]](using F: Applicative[F]): FloorDoorsAlg[F] = new FloorDoorsAlg[F]:
   def await(floor: Floor): F[Unit] = F.unit

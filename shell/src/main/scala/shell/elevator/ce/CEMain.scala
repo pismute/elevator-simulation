@@ -1,13 +1,11 @@
 package shell.elevator.ce
 
-import scala.collection.immutable.IntMap
 import scala.concurrent.duration.DurationInt
 
-import cats.effect.{Async, IO, IOApp, Resource}
+import cats.effect.{Async, IO, IOApp}
 import cats.effect.std.Console
 import cats.mtl.Ask
 import cats.syntax.apply.*
-import cats.syntax.bifunctor.*
 import cats.syntax.flatMap.*
 import cats.syntax.functor.*
 
@@ -15,9 +13,9 @@ import fs2.Stream
 
 import core.elevator.*
 
-import shell.elevator.ce.app.{*, given}
+import shell.elevator.ce.app.*
 import shell.elevator.ce.appt.*
-import shell.elevator.ce.mtl.{*, given}
+import shell.elevator.ce.mtl.given
 
 object CEMain extends IOApp.Simple:
   val run = runApp(

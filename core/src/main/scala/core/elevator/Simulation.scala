@@ -2,8 +2,6 @@ package core.elevator
 
 import cats.{Functor, Show}
 import cats.derived.derived
-import cats.mtl.{Raise, Stateful}
-import cats.syntax.flatMap.*
 import cats.syntax.functor.*
 
 import Simulation.*

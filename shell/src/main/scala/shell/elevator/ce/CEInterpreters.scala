@@ -4,15 +4,11 @@ import cats.{Monad, Parallel}
 import cats.effect.{Async, Ref, Resource, Temporal}
 import cats.effect.std.Console
 import cats.mtl.{Ask, Raise, Tell}
-import cats.syntax.flatMap.*
 import cats.syntax.functor.*
-
-import classy.effect.*
 
 import core.elevator.*
 
 import shell.elevator.ce.app.{*, given}
-import shell.elevator.ce.mtl.*
 
 final case class CEInterpreters[F[_]](
     simulation: SimulationAlg[F],
