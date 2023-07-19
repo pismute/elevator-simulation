@@ -3,7 +3,6 @@ package core.elevator
 import cats.{Monad, Order, Show}
 import cats.derived.derived
 import cats.mtl.Raise
-import cats.syntax.applicative.*
 import cats.syntax.apply.*
 import cats.syntax.flatMap.*
 import cats.syntax.foldable.*

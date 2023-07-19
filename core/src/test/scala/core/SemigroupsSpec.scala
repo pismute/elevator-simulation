@@ -1,12 +1,11 @@
 package core
 
-import cats.Semigroup
 import cats.kernel.laws.discipline.*
 import cats.syntax.semigroup.*
 
 import org.scalacheck.Arbitrary
 
-import core.semigroups.{*, given}
+import core.semigroups.*
 import core.test.*
 
 class SemigroupsSpec extends CoreSuite:

@@ -1,13 +1,9 @@
 package core.elevator
 
-import cats.syntax.applicative.*
-import cats.syntax.apply.*
 import cats.syntax.flatMap.*
 import cats.syntax.functor.*
 
-import TestAppSuite.{*, given}
-
-import core.test.*
+import TestAppSuite.*
 
 class SystemSpec extends TestAppSuite:
   test("System can validate a passenger") {

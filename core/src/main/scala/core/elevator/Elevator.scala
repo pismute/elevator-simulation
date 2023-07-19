@@ -1,9 +1,8 @@
 package core.elevator
 
-import cats.{Monad, Order, Show}
+import cats.{Monad, Show}
 import cats.derived.derived
-import cats.instances.list.*
-import cats.mtl.{Ask, Raise}
+import cats.mtl.Raise
 import cats.syntax.applicative.*
 import cats.syntax.apply.*
 import cats.syntax.either.*

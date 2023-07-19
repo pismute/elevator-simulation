@@ -2,7 +2,7 @@ package core.elevator
 
 import java.util.UUID
 
-import cats.{Applicative, Show}
+import cats.Show
 import cats.derived.derived
 
 type ElevatorId = UUID

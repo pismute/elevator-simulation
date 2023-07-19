@@ -1,7 +1,5 @@
 package core.elevator
 
-import cats.syntax.applicative.*
-import cats.syntax.apply.*
 import cats.syntax.flatMap.*
 import cats.syntax.functor.*
 import cats.syntax.show.*
@@ -9,7 +7,6 @@ import cats.syntax.show.*
 import TestAppSuite.{*, given}
 
 import core.elevator.Elevator.*
-import core.test.*
 
 class ElevatorSpec extends TestAppSuite:
   test("An elevator should return distance from a current floor") {
