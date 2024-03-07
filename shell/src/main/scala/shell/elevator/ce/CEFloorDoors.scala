@@ -6,7 +6,6 @@ import cats.Show
 import cats.derived.derived
 import cats.effect.{Async, Deferred, Ref}
 import cats.mtl.Raise
-import cats.syntax.applicative.*
 import cats.syntax.flatMap.*
 import cats.syntax.functor.*
 import cats.syntax.traverse.*
