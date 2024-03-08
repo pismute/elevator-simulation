@@ -1,12 +1,12 @@
 import scala.Ordering.Implicits._
 
-import _root_.io.github.davidgregory084.ScalacOption
 import _root_.io.github.davidgregory084.ScalaVersion.*
+import _root_.io.github.davidgregory084.ScalacOption
 
 name := "elevator-simulation"
 
 ThisBuild / organization := "elevator"
-ThisBuild / scalaVersion := "3.3.0"
+ThisBuild / scalaVersion := "3.4.0"
 
 ThisBuild / scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.6.0"
 ThisBuild / scalafixDependencies += "org.typelevel" %% "typelevel-scalafix" % "0.1.5"
