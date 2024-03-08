@@ -1,7 +1,7 @@
 import scala.Ordering.Implicits._
 
-import _root_.io.github.davidgregory084.ScalaVersion.*
-import _root_.io.github.davidgregory084.ScalacOption
+import org.typelevel.scalacoptions.*
+import org.typelevel.scalacoptions.ScalaVersion.*
 
 name := "elevator-simulation"
 
