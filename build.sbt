@@ -6,7 +6,7 @@ import org.typelevel.scalacoptions.ScalaVersion.*
 name := "elevator-simulation"
 
 ThisBuild / organization := "elevator"
-ThisBuild / scalaVersion := "3.4.1"
+ThisBuild / scalaVersion := "3.4.2"
 
 ThisBuild / scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.6.0"
 ThisBuild / scalafixDependencies += "org.typelevel" %% "typelevel-scalafix" % "0.1.6"
