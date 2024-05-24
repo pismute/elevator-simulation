@@ -38,7 +38,7 @@ object Settings {
       "org.scalameta" %% "munit-scalacheck" % Versions.Munit % ItTest,
       "org.typelevel" %% "cats-laws" % Versions.Cats % ItTest,
       "org.typelevel" %% "discipline-munit" % Versions.DisciplineMunit % ItTest,
-      "org.typelevel" %% "munit-cats-effect-3" % Versions.MunitCatsEffect % ItTest,
+      "org.typelevel" %% "munit-cats-effect" % Versions.MunitCatsEffect % ItTest,
       "org.typelevel" %% "cats-effect-testkit" % Versions.CatsEffect % ItTest
     )
   )
