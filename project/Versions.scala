@@ -1,5 +1,5 @@
 object Versions {
-  val Cats = "2.12.0"
+  val Cats = "2.13.0"
   val CatsEffect = "3.5.4"
   val CatsMtl = "1.4.0"
   val CatsTime = "0.5.1"
