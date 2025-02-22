@@ -7,7 +7,7 @@ object Versions {
   val ClassyOptics = "0.2.1"
   val DisciplineMunit = "2.0.0"
   val Kittens = "3.3.0"
-  val Munit = "1.0.0-M11"
+  val Munit = "1.0.0"
   val MunitCatsEffect = "2.0.0"
   val Shapeless = "3.1.0"
   val Typename = "1.0.0"
