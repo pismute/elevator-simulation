@@ -11,5 +11,5 @@ object Versions {
   val MunitCatsEffect = "2.0.0"
   val Shapeless = "3.1.0"
   val Typename = "1.0.0"
-  val Fs2 = "3.10.2"
+  val Fs2 = "3.12.0"
 }
